@@ -8,6 +8,7 @@ const baseUrl = "http://localhost:3000/dogs"
 
 function renderDogs(){
    let tableRow = document.getElementById("table-body")
+   tableRow.innerText =""
 
    fetch(baseUrl)
    .then (resp => resp.json())
@@ -43,8 +44,34 @@ function populateForm(id){
       form.addEventListener("submit", ()=> {
          event.preventDefault()
          console.log("clicked submit")
-
-         
+         updateDog(data.id, form, data)
       })
    })
+}
+
+function updateDog(id, form, data){
+   // console.log(form.name.value)
+   // console.log(data.name)
+   // console.log(id)
+   // let updatedDogInfo = {
+   //    name: form.name.value,
+   //    breed: form.breed.value,
+   //    sex: form.sex.value
+   // }
+//   console.log(updatedDogInfo)
+
+   fetch(`${baseUrl}/${id}`, {
+      method: "PATCH", 
+      headers: {
+         "content-type": "application/json"
+      },
+      body: JSON.stringify({
+         name: form.name.value,
+         breed: form.breed.value,
+         sex: form.sex.value
+      })
+  })
+  .then(resp => resp.json())
+  .then(json => {renderDogs(json)
+})
 }
